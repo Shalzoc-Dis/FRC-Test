@@ -97,6 +97,9 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.set(percentOutput);
+    } else {
+      VelocityVoltage target = new VelocityVoltage(0).withVelocity(ConvertDriveIn(desiredState.speedMetersPerSecond));
+      driveMotor.setControl(target);
     }
     }
   private void setAngle(SwerveModuleState desiredState, int number) {
