@@ -27,6 +27,7 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
+  private GenericEntry[] angleEntries;
 
   private TalonController angle;
   private TalonController drive;
@@ -42,11 +43,15 @@ public class SwerveModuleTalon extends SwerveModuleIO{
 
   private double driveConvert;
   private double angleConvert;
-
   private ShuffleboardTab display = Shuffleboard.getTab("Testing");
-
-
+  
   public SwerveModuleTalon(TalonModuleInfo Info) {
+    angleEntries = new GenericEntry[4];
+    for (int i = 0; i < 4; i++) {
+        angleEntries[i] = display.add("Module " + i, 0)
+                                .withWidget(BuiltInWidgets.kGraph)
+                                .getEntry();
+    }
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
 
@@ -94,36 +99,18 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
       driveMotor.set(percentOutput);
-    } else {
-      VelocityVoltage target = new VelocityVoltage(0).withVelocity(ConvertDriveIn(desiredState.speedMetersPerSecond));
-      driveMotor.setControl(target);
     }
-  }
-
+    }
   private void setAngle(SwerveModuleState desiredState, int number) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     // Rotation2d angle =
     //     (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
     //         ? lastAngle
     //         : desiredState.angle;
-
+  
     Rotation2d angle = desiredState.angle;
-
-    switch(number) {
-      case 0:
-        logNumber(display, "Module 0", angle.getRotations());
-        break;
-      case 1:
-        logNumber(display, "Module 1", angle.getRotations());
-        break;
-      case 2:
-        logNumber(display, "Module 2", angle.getRotations());
-        break;
-      case 3:
-        logNumber(display, "Module 3", angle.getRotations());
-        break;
-    }
-
+  
+    angleEntries[number].setDouble(angle.getRotations());
 
     PositionVoltage target = new PositionVoltage(0);
     angleMotor.setControl(target.withPosition(ConvertAngleIn(Units.degreesToRotations(angle.getDegrees()))));
