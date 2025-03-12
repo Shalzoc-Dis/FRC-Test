@@ -43,6 +43,8 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   private double driveConvert;
   private double angleConvert;
 
+  private ShuffleboardTab display = Shuffleboard.getTab("Testing");
+
   public SwerveModuleTalon(TalonModuleInfo Info) {
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
@@ -108,16 +110,16 @@ public class SwerveModuleTalon extends SwerveModuleIO{
 
     switch(number) {
       case 0:
-        logNumber("Testing", "Module 0", number);
+        logNumber(display, "Module 0", number);
         break;
       case 1:
-        logNumber("Testing", "Module 1", number);
+        logNumber(display, "Module 1", number);
         break;
       case 2:
-        logNumber("Testing", "Module 2", number);
+        logNumber(display, "Module 2", number);
         break;
       case 3:
-        logNumber("Testing", "Module 3", number);
+        logNumber(display, "Module 3", number);
         break;
     }
 
@@ -171,11 +173,10 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     return angle * angleConvert;
   }
   
-  private void logNumber(String tab, String name, double number) {
-    Shuffleboard.getTab(tab)
-      .add(name, number)
-      .withWidget(BuiltInWidgets.kGraph)
-      .getEntry();
+  private void logNumber(ShuffleboardTab tab, String name, double number) {
+    tab.add(name, number)
+       .withWidget(BuiltInWidgets.kGraph)
+       .getEntry();
   }
 
 }
