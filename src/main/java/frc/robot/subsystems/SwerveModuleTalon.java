@@ -171,9 +171,9 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     return angle * angleConvert;
   }
   
-  private void logNumber(String tab, String name, double numnber) {
+  private void logNumber(String tab, String name, double number) {
     Shuffleboard.getTab(tab)
-      .add(name, 0)
+      .add(name, number)
       .withWidget(BuiltInWidgets.kGraph)
       .getEntry();
   }
