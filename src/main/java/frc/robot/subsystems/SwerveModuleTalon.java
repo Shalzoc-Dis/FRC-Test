@@ -27,7 +27,7 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
-  private GenericEntry[] angleEntries;
+  private GenericEntry angleEntry;
 
   private TalonController angle;
   private TalonController drive;
@@ -46,12 +46,10 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   private ShuffleboardTab display = Shuffleboard.getTab("Testing");
   
   public SwerveModuleTalon(TalonModuleInfo Info) {
-    angleEntries = new GenericEntry[4];
-    for (int i = 0; i < 4; i++) {
-        angleEntries[i] = display.add("Module " + i, 0)
+        angleEntry = display.add("Module " + Info.moduleNumber, 0)
                                 .withWidget(BuiltInWidgets.kGraph)
                                 .getEntry();
-    }
+
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
 
@@ -110,7 +108,7 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   
     Rotation2d angle = desiredState.angle;
   
-    angleEntries[number].setDouble(angle.getRotations());
+    angleEntry.setDouble(angle.getRotations());
 
     PositionVoltage target = new PositionVoltage(0);
     angleMotor.setControl(target.withPosition(ConvertAngleIn(Units.degreesToRotations(angle.getDegrees()))));
