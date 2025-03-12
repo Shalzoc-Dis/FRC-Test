@@ -6,7 +6,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public abstract class SwerveModuleIO{
   
-  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, int number) {
   }
 
   public void resetToAbsolute() {

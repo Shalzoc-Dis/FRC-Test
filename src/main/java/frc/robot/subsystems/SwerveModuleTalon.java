@@ -9,11 +9,19 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.lib.Items.Controllers.TalonController;
 import frc.lib.configs.Subsystems.TalonModuleInfo;
 import frc.lib.math.OnboardModuleState;
+
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.networktables.GenericEntry;
+
+import java.util.Map;
 
 public class SwerveModuleTalon extends SwerveModuleIO{
   public int moduleNumber;
@@ -57,12 +65,12 @@ public class SwerveModuleTalon extends SwerveModuleIO{
   }
 
   @Override
-  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
+  public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop, int number) {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
 
-      setAngle(desiredState);
+      setAngle(desiredState, number);
       setSpeed(desiredState, isOpenLoop);
   }
 
@@ -89,12 +97,30 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     }
   }
 
-  private void setAngle(SwerveModuleState desiredState) {
+  private void setAngle(SwerveModuleState desiredState, int number) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
-    Rotation2d angle =
-        (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
-            ? lastAngle
-            : desiredState.angle;
+    // Rotation2d angle =
+    //     (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+    //         ? lastAngle
+    //         : desiredState.angle;
+
+    Rotation2d angle = desiredState.angle;
+
+    switch(number) {
+      case 0:
+        logNumber("Testing", "Module 0", number);
+        break;
+      case 1:
+        logNumber("Testing", "Module 1", number);
+        break;
+      case 2:
+        logNumber("Testing", "Module 2", number);
+        break;
+      case 3:
+        logNumber("Testing", "Module 3", number);
+        break;
+    }
+
 
     PositionVoltage target = new PositionVoltage(0);
     angleMotor.setControl(target.withPosition(ConvertAngleIn(Units.degreesToRotations(angle.getDegrees()))));
@@ -145,5 +171,11 @@ public class SwerveModuleTalon extends SwerveModuleIO{
     return angle * angleConvert;
   }
   
+  private void logNumber(String tab, String name, double numnber) {
+    Shuffleboard.getTab(tab)
+      .add(name, 0)
+      .withWidget(BuiltInWidgets.kGraph)
+      .getEntry();
+  }
 
 }
