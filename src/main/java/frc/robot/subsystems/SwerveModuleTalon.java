@@ -45,6 +45,7 @@ public class SwerveModuleTalon extends SwerveModuleIO{
 
   private ShuffleboardTab display = Shuffleboard.getTab("Testing");
 
+
   public SwerveModuleTalon(TalonModuleInfo Info) {
     this.moduleNumber = Info.moduleNumber;
     this.angleOffset = Rotation2d.fromDegrees(Info.angleOffset);
@@ -110,16 +111,16 @@ public class SwerveModuleTalon extends SwerveModuleIO{
 
     switch(number) {
       case 0:
-        logNumber(display, "Module 0", number);
+        logNumber(display, "Module 0", angle.getRotations());
         break;
       case 1:
-        logNumber(display, "Module 1", number);
+        logNumber(display, "Module 1", angle.getRotations());
         break;
       case 2:
-        logNumber(display, "Module 2", number);
+        logNumber(display, "Module 2", angle.getRotations());
         break;
       case 3:
-        logNumber(display, "Module 3", number);
+        logNumber(display, "Module 3", angle.getRotations());
         break;
     }
 
